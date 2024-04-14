@@ -1,5 +1,21 @@
 <script>
+  import { goto } from "$app/navigation";
+
   let loginState = "LoginState";
+
+  let selectedPublic = false;
+  function goToPublicApps() {
+    selectedDev = false;
+    selectedPublic = !selectedPublic;
+    goto("/");
+  }
+
+  let selectedDev = false;
+  function goToDevDashboard() {
+    selectedPublic = false;
+    selectedDev = !selectedDev;
+    goto("../devDashboard");
+  }
 </script>
 
 <nav class="navbar navbar-expand-lg bg-primary" style="padding: 18px 32px">
@@ -25,9 +41,23 @@
 </nav>
 <div class="content-container">
   <div class="nav-buttons-container">
-    <button class="animated-button"> Public Apps </button>
+    <button
+      class="{selectedPublic
+        ? 'selected-button'
+        : 'animated-button'} nav-buttons"
+      on:click={goToPublicApps}
+    >
+      Public Apps
+    </button>
     {#if loginState !== "Login"}
-      <button class="animated-button"> Developer Dashboard </button>
+      <button
+        class="{selectedDev
+          ? 'selected-button'
+          : 'animated-button'} nav-buttons"
+        on:click={goToDevDashboard}
+      >
+        Developer Dashboard
+      </button>
     {/if}
   </div>
   <slot />
@@ -67,18 +97,41 @@
     transition: 0.5s;
   }
 
+  .animated-button:active {
+    color: #003155;
+    scale: 0.95;
+  }
+
   .animated-button:hover::after,
-  .animated-button:hover::before,
-  .animated-button:focus::after,
-  .animated-button:focus::before {
+  .animated-button:hover::before {
     width: 100%;
   }
 
-  .animated-button:focus {
+  /* .animated-button:focus {
     transition: 0.3s;
     color: #005be3;
+  } */
+
+  .selected-button {
+    color: #005be3;
+    text-decoration: none;
+    font-size: 25px;
+    border: none;
+    background: none;
+    font-weight: 600;
+    margin-right: 64px;
   }
-  .animated-button:active {
+
+  .selected-button::after,
+  .selected-button::before {
+    content: "";
+    height: 2px;
+    background: #005be3;
+    display: block;
+    transition: 0.5s;
+  }
+
+  .selected-button:active {
     color: #003155;
     scale: 0.95;
   }
