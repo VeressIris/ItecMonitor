@@ -65,22 +65,24 @@
 
 <style>
   .content-container {
-    margin: 0 72px;
+    margin: 0 120px;
     color: #282936;
   }
 
   .nav-buttons-container {
     margin: 24px 0;
+    display: flex;
+    justify-content: center;
   }
 
   .animated-button {
     color: #282936;
     text-decoration: none;
-    font-size: 25px;
+    font-size: 26px;
     border: none;
     background: none;
     font-weight: 600;
-    margin-right: 64px;
+    margin: 0 60px;
   }
 
   .animated-button::before {
@@ -115,11 +117,11 @@
   .selected-button {
     color: #005be3;
     text-decoration: none;
-    font-size: 25px;
+    font-size: 26px;
     border: none;
     background: none;
     font-weight: 600;
-    margin-right: 64px;
+    margin: 0 60px;
   }
 
   .selected-button::after,
