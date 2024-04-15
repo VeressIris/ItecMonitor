@@ -1,3 +1,7 @@
+<script>
+  import AppCard from "../../lib/AppCard.svelte";
+</script>
+
 <div class="header">
   <h1>Developer Dashboard</h1>
   <div class="btn-group dropend">
@@ -12,7 +16,7 @@
     </button>
     <form class="dropdown-menu p-3" style="width: 300px">
       <div class="mb-3">
-        <label for="appName" class="form-label">Password</label>
+        <label for="appName" class="form-label">App name:</label>
         <input
           type="text"
           class="form-control"
@@ -34,34 +38,10 @@
   </div>
 </div>
 
-<div class="list">
-  <div class="card border-secondary" style="width: 20rem;">
-    <div class="card-body">
-      <h2 class="card-title" style="margin-bottom: 12px">App name</h2>
-      <hr />
-      <p class="card-text">https://example.com/</p>
-      <p class="card-text">Endpoints: 2</p>
-      <p class="card-text">Status: Up</p>
-      <a href="#" class="btn btn-primary">View details</a>
-    </div>
-  </div>
-</div>
+<AppCard />
 
 <style>
-  .header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 46px;
-  }
   .header h1 {
     margin-right: 32px;
-  }
-  .list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-  }
-  .card {
-    margin-bottom: 32px;
   }
 </style>

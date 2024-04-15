@@ -30,7 +30,7 @@
         aria-expanded="false"
         style="color: white"
       >
-        loginState
+        {loginState}
       </button>
       <ul class="dropdown-menu dropdown-menu-lg-end">
         <li><button class="login-options">Login with Google</button></li>

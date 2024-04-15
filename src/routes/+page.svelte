@@ -1,1 +1,9 @@
-<h1>PUBLIC page</h1>
+<script>
+  import AppCard from "../lib/AppCard.svelte";
+</script>
+
+<div class="header">
+  <h1>Public Apps:</h1>
+</div>
+
+<AppCard />
