@@ -24,6 +24,27 @@
   const githubProvider = new GithubAuthProvider();
   const auth = getAuth();
 
+  function loginRequest(email, username) {
+    const user = {
+      email: email,
+      username: username,
+    };
+    fetch("http://127.0.0.1:3000/addUser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((response) => {
+        response.json();
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  }
+
   let loggedIn = false;
 
   // authentication functions
@@ -35,18 +56,19 @@
         const token = credential.accessToken;
 
         const user = result.user;
+        loginRequest(user.email, user.displayName);
         loggedIn = true;
-        console.log(user);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         const email = error.customData.email;
         const credential = GoogleAuthProvider.credentialFromError(error);
+        console.log("error logging in with google: ");
+        console.log(errorMessage);
         alert(
           "An account with this email already exists. Try logging in with Github."
         );
-        console.log("error logging in with google");
       });
   }
 
@@ -81,6 +103,7 @@
         console.log("signed out");
       })
       .catch((error) => {
+        console.log(error);
         console.log("error signing out");
       });
   }
@@ -204,11 +227,6 @@
   .animated-button:hover::before {
     width: 100%;
   }
-
-  /* .animated-button:focus {
-    transition: 0.3s;
-    color: #005be3;
-  } */
 
   .selected-button {
     color: #005be3;

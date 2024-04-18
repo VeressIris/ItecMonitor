@@ -13,20 +13,20 @@ type FirestoreClient struct {
 }
 
 type User struct {
-	Email string
-	Name  string
+	Email string `json:"email"`
+	Name  string `json:"username"`
 }
 
 type Endpoint struct {
-	Path   string
-	Status string
+	Path   string `json:"path"`
+	Status string `json:"status"`
 }
 
 type App struct {
-	Developer string
+	Developer string `json:"developer"`
 	Endpoints []Endpoint
-	BaseURL   string
-	Status    string
+	BaseURL   string `json:"baseurl"`
+	Status    string `json:"status"`
 }
 
 func GetFirestoreClient(projectID string) (*FirestoreClient, error) {
