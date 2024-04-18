@@ -1,7 +1,89 @@
 <script>
   import { goto } from "$app/navigation";
+  import {
+    GoogleAuthProvider,
+    GithubAuthProvider,
+    signInWithPopup,
+    getAuth,
+    signOut,
+  } from "firebase/auth";
+  import { initializeApp } from "firebase/app";
 
-  let loginState = "LoginState";
+  // firebase constants
+  const firebaseConfig = {
+    apiKey: "AIzaSyDAT9rLWYjZ84ebly-thXKf23uxGKFRKV8",
+    authDomain: "itec2024revamp.firebaseapp.com",
+    projectId: "itec2024revamp",
+    storageBucket: "itec2024revamp.appspot.com",
+    messagingSenderId: "620055731881",
+    appId: "1:620055731881:web:c170cf6563be7c065153b8",
+    measurementId: "G-GTQR42DLSZ",
+  };
+  const app = initializeApp(firebaseConfig);
+  const googleProvider = new GoogleAuthProvider();
+  const githubProvider = new GithubAuthProvider();
+  const auth = getAuth();
+
+  let loggedIn = false;
+
+  // authentication functions
+  function loginWithGoogle() {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+
+        const user = result.user;
+        loggedIn = true;
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        const email = error.customData.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        alert(
+          "An account with this email already exists. Try logging in with Github."
+        );
+        console.log("error logging in with google");
+      });
+  }
+
+  function loginWithGitHub() {
+    signInWithPopup(auth, githubProvider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GithubAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+
+        const user = result.user;
+        let loggedIn = true;
+        console.log(user + "from github");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        const email = error.customData.email;
+        const credential = GithubAuthProvider.credentialFromError(error);
+        alert(
+          "An account with this email already exists. Try logging in with Google."
+        );
+        console.log("error logging in with github: ");
+        console.log(errorMessage);
+      });
+  }
+
+  function logout() {
+    signOut(auth)
+      .then(() => {
+        loggedIn = false;
+        console.log("signed out");
+      })
+      .catch((error) => {
+        console.log("error signing out");
+      });
+  }
 
   let selectedPublic = false;
   function goToPublicApps() {
@@ -21,22 +103,36 @@
 <nav class="navbar navbar-expand-lg bg-primary" style="padding: 18px 32px">
   <div class="container-fluid">
     <h1 class="navbar-child" style="margin-bottom: 0">ItecMonitor</h1>
-    <div class="dropdown">
-      <button
-        type="button"
-        class="btn dropdown-toggle login-bttn"
-        data-bs-toggle="dropdown"
-        data-bs-display="static"
-        aria-expanded="false"
-        style="color: white"
+    {#if loggedIn}
+      <button type="button" class="btn btn-primary login-bttn" on:click={logout}
+        >Logout</button
       >
-        {loginState}
-      </button>
-      <ul class="dropdown-menu dropdown-menu-lg-end">
-        <li><button class="login-options">Login with Google</button></li>
-        <li><button class="login-options">Login with Github</button></li>
-      </ul>
-    </div>
+    {:else}
+      <div class="dropdown">
+        <button
+          type="button"
+          class="btn dropdown-toggle login-bttn"
+          data-bs-toggle="dropdown"
+          data-bs-display="static"
+          aria-expanded="false"
+          style="color: white"
+        >
+          Login
+        </button>
+        <ul class="dropdown-menu dropdown-menu-lg-end">
+          <li>
+            <button class="login-options" on:click={loginWithGoogle}
+              >Login with Google</button
+            >
+          </li>
+          <li>
+            <button class="login-options" on:click={loginWithGitHub}
+              >Login with Github</button
+            >
+          </li>
+        </ul>
+      </div>
+    {/if}
   </div>
 </nav>
 <div class="content-container">
@@ -49,7 +145,7 @@
     >
       Public Apps
     </button>
-    {#if loginState !== "Login"}
+    {#if loggedIn}
       <button
         class="{selectedDev
           ? 'selected-button'
