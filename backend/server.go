@@ -26,7 +26,7 @@ func main() {
 		if err := c.BodyParser(user); err != nil {
 			return err
 		}
-		client.WriteUserToDatabase(*user)
+		client.WriteUserToDatabase(*user, user.UID)
 		fmt.Printf("%s:%s added to database\n", user.Name, user.Email)
 		return c.JSON("added user")
 	})

@@ -24,10 +24,11 @@
   const githubProvider = new GithubAuthProvider();
   const auth = getAuth();
 
-  function loginRequest(email, username) {
+  function loginRequest(email, username, uid) {
     const user = {
       email: email,
       username: username,
+      uid: uid,
     };
     fetch("http://127.0.0.1:3000/addUser", {
       method: "POST",
@@ -37,8 +38,8 @@
       body: JSON.stringify(user),
     })
       .then((response) => {
-        response.json();
         console.log(response);
+        response.json();
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
@@ -56,7 +57,7 @@
         const token = credential.accessToken;
 
         const user = result.user;
-        loginRequest(user.email, user.displayName);
+        loginRequest(user.email, user.displayName, user.uid);
         loggedIn = true;
       })
       .catch((error) => {

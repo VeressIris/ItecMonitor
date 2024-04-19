@@ -15,6 +15,7 @@ type FirestoreClient struct {
 type User struct {
 	Email string `json:"email"`
 	Name  string `json:"username"`
+	UID   string `json:"uid"`
 }
 
 type Endpoint struct {
@@ -39,29 +40,29 @@ func GetFirestoreClient(projectID string) (*FirestoreClient, error) {
 	return &FirestoreClient{Client: client, ctx: ctx}, nil
 }
 
-func (firestoreClient *FirestoreClient) WriteToDatabase(collection string, data map[string]interface{}) {
-	_, _, err := firestoreClient.Client.Collection(collection).Add(firestoreClient.ctx, data)
+func (firestoreClient *FirestoreClient) WriteToDatabase(collection string, data map[string]interface{}, uid string) {
+	_, err := firestoreClient.Client.Collection(collection).Doc(uid).Set(firestoreClient.ctx, data)
 	if err != nil {
 		log.Fatalf("Failed adding to %s: %v", collection, err)
 	}
 }
 
-func (firestoreClient *FirestoreClient) WriteUserToDatabase(user User) {
+func (firestoreClient *FirestoreClient) WriteUserToDatabase(user User, uid string) {
 	data := map[string]interface{}{
 		"email": user.Email,
 		"name":  user.Name,
 	}
-	firestoreClient.WriteToDatabase("users", data)
+	firestoreClient.WriteToDatabase("users", data, uid)
 }
 
-func (firestoreClient *FirestoreClient) WriteAppToDatabase(app App) {
+func (firestoreClient *FirestoreClient) WriteAppToDatabase(app App, uid string) {
 	data := map[string]interface{}{
 		"developer": app.Developer,
 		"endpoints": app.Endpoints,
 		"baseURL":   app.BaseURL,
 		"status":    app.Status,
 	}
-	firestoreClient.WriteToDatabase("apps", data)
+	firestoreClient.WriteToDatabase("apps", data, uid)
 }
 
 func (firestoreClient *FirestoreClient) WriteEndpointToDatabase(app string, endpoint Endpoint) {
