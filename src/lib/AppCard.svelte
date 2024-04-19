@@ -26,10 +26,6 @@
 </div>
 
 <style>
-  .list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-  }
   .card {
     margin-bottom: 32px;
   }

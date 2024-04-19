@@ -12,7 +12,7 @@
   href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
 />
 
-<div class="list">
+<div class="status-evolution">
   <div class="card border-secondary" style="width: 20rem;">
     <div class="card-body">
       <h2 class="card-title" style="margin-bottom: 12px">{endpointName}</h2>
@@ -86,7 +86,7 @@
 </div>
 
 <style>
-  .list {
+  .status-evolution {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
   }
