@@ -2,8 +2,8 @@
   import { goto } from "$app/navigation";
   export let appName = "Example app";
   export let baseURL = "https://example.com/";
-  export let endpoints = 2;
-  export let status = "Up";
+  export let endpoints = 0;
+  export let status = "Down";
 
   function openAppPage() {
     goto("../appPage");

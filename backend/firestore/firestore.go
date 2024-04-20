@@ -5,6 +5,7 @@ import (
 	"log"
 
 	firestore "cloud.google.com/go/firestore"
+	"google.golang.org/api/iterator"
 )
 
 type FirestoreClient struct {
@@ -77,4 +78,44 @@ func (firestoreClient *FirestoreClient) WriteEndpointToDatabase(app string, endp
 	if err != nil {
 		log.Fatalf("Failed adding endpoint to apps: %v", err)
 	}
+}
+
+func (firestoreClient *FirestoreClient) GetDevApps(dev string) ([]App, error) {
+	apps := make([]App, 0)
+	iter := firestoreClient.Client.Collection("apps").Where("developer", "==", dev).Documents(firestoreClient.ctx)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+
+		// parse endpoints data
+		endpointsData, ok := doc.Data()["endpoints"].([]interface{})
+		if !ok {
+			log.Fatalf("Failed to retrieve endpoints data")
+		}
+		endpoints := make([]Endpoint, len(endpointsData))
+		for i, endpointData := range endpointsData {
+			endpoint := endpointData.(map[string]interface{})
+			endpoints[i] = Endpoint{
+				Path:   endpoint["path"].(string),
+				Status: endpoint["status"].(string),
+			}
+		}
+
+		// create app
+		app := App{
+			Name:      doc.Ref.ID,
+			Developer: doc.Data()["developer"].(string),
+			BaseURL:   doc.Data()["baseURL"].(string),
+			Endpoints: endpoints,
+			Status:    doc.Data()["status"].(string),
+		}
+
+		apps = append(apps, app)
+	}
+	return apps, nil
 }

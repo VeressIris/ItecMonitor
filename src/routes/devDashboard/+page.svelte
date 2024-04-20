@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from "svelte";
   import AppCard from "../../lib/AppCard.svelte";
   import { currentUser } from "../../stores.js";
 
@@ -10,22 +11,26 @@
   let appName = "";
   let baseURL = "";
 
-  let apps = [
-    {
-      name: "Example app",
-      developer: "me",
-      baseURL: "https://example.com/",
-      endpoints: 3,
-      status: "down",
-    },
-    {
-      name: "Another app",
-      developer: "me",
-      baseURL: "https://another.com/",
-      endpoints: 5,
-      status: "up",
-    },
-  ];
+  let apps = [];
+
+  function getDevApps() {
+    fetch("http://127.0.0.1:3000/getDevApps", {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain",
+      },
+      body: currentUserUID,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        apps = data;
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  }
 
   function addApp() {
     const newApp = {
@@ -35,8 +40,9 @@
       endpoints: [],
       status: "Down",
     };
-    apps = [...apps, newApp];
+
     addAppToDB(newApp);
+    apps = [...apps, newApp];
   }
 
   function addAppToDB(app) {
@@ -54,6 +60,11 @@
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
       });
+  }
+
+  $: {
+    console.log(currentUserUID);
+    getDevApps();
   }
 </script>
 
@@ -104,16 +115,18 @@
     </div>
   </div>
 
-  <div class="list">
-    {#each apps as app}
-      <AppCard
-        appName={app.name}
-        baseURL={app.baseURL}
-        endpoints={app.endpoints}
-        status={app.status}
-      />
-    {/each}
-  </div>
+  {#if apps.length > 0}
+    <div class="list">
+      {#each apps as app}
+        <AppCard
+          appName={app.name}
+          baseURL={app.baseURL}
+          endpoints={app.endpoints}
+          status={app.status}
+        />
+      {/each}
+    </div>
+  {/if}
 {/if}
 
 <style>
