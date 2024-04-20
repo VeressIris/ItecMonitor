@@ -12,31 +12,31 @@
 
   let apps = [
     {
-      developer: "me",
-      endpoints: 3,
-      baseURL: "https://example.com/",
-      status: "down",
       name: "Example app",
+      developer: "me",
+      baseURL: "https://example.com/",
+      endpoints: 3,
+      status: "down",
     },
     {
-      developer: "me",
-      endpoints: 5,
-      baseURL: "https://another.com/",
-      status: "up",
       name: "Another app",
+      developer: "me",
+      baseURL: "https://another.com/",
+      endpoints: 5,
+      status: "up",
     },
   ];
 
   function addApp() {
     const newApp = {
-      developer: currentUserUID,
-      endpoints: [],
-      baseURL: baseURL,
-      status: "Down",
       name: appName,
+      developer: currentUserUID,
+      baseURL: baseURL,
+      endpoints: [],
+      status: "Down",
     };
     apps = [...apps, newApp];
-    // addAppToDB(newApp);
+    addAppToDB(newApp);
   }
 
   function addAppToDB(app) {

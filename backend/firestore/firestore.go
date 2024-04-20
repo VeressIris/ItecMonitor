@@ -24,9 +24,10 @@ type Endpoint struct {
 }
 
 type App struct {
+	Name      string `json:"name"`
 	Developer string `json:"developer"`
-	Endpoints []Endpoint
 	BaseURL   string `json:"baseurl"`
+	Endpoints []Endpoint
 	Status    string `json:"status"`
 }
 
@@ -55,14 +56,14 @@ func (firestoreClient *FirestoreClient) WriteUserToDatabase(user User, uid strin
 	firestoreClient.WriteToDatabase("users", data, uid)
 }
 
-func (firestoreClient *FirestoreClient) WriteAppToDatabase(app App, uid string) {
+func (firestoreClient *FirestoreClient) WriteAppToDatabase(app App, name string) {
 	data := map[string]interface{}{
 		"developer": app.Developer,
-		"endpoints": app.Endpoints,
 		"baseURL":   app.BaseURL,
+		"endpoints": app.Endpoints,
 		"status":    app.Status,
 	}
-	firestoreClient.WriteToDatabase("apps", data, uid)
+	firestoreClient.WriteToDatabase("apps", data, name)
 }
 
 func (firestoreClient *FirestoreClient) WriteEndpointToDatabase(app string, endpoint Endpoint) {

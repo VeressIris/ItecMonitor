@@ -31,5 +31,15 @@ func main() {
 		return c.JSON("added user")
 	})
 
+	app.Post("/addApp", func(c *fiber.Ctx) error {
+		newApp := new(firestore.App)
+		if err := c.BodyParser(newApp); err != nil {
+			return err
+		}
+		client.WriteAppToDatabase(*newApp, newApp.Name)
+		fmt.Printf("%s:%s added to database\n", newApp.Developer, newApp.Name)
+		return c.JSON("added new app")
+	})
+
 	app.Listen(":3000")
 }
