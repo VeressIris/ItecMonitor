@@ -1,22 +1,51 @@
 <script>
   import AppCard from "../../lib/AppCard.svelte";
 
+  let appName = "";
+  let baseURL = "";
+
   let apps = [
     {
       name: "Example app",
       baseURL: "https://example.com/",
       endpoints: 3,
-      Status: "down",
+      status: "down",
     },
     {
       name: "Another app",
       baseURL: "https://another.com/",
       endpoints: 5,
-      Status: "up",
+      status: "up",
     },
   ];
 
-  function addApp(event) {}
+  function addApp() {
+    const newApp = {
+      name: appName,
+      baseURL: baseURL,
+      endpoints: 0,
+      status: "Down",
+    };
+    apps = [...apps, newApp];
+    // addAppToDB(newApp);
+  }
+
+  function addAppToDB(app) {
+    fetch("http://127.0.0.1:3000/addApp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(app),
+    })
+      .then((response) => {
+        console.log(response);
+        response.json();
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  }
 </script>
 
 <div class="header">
@@ -43,6 +72,7 @@
           class="form-control"
           id="appName"
           placeholder="Example app"
+          bind:value={appName}
         />
       </div>
       <div class="mb-3">
@@ -52,6 +82,7 @@
           class="form-control"
           id="baseurl"
           placeholder="https://example.com/"
+          bind:value={baseURL}
         />
       </div>
       <button type="submit" class="btn btn-primary">Add app</button>

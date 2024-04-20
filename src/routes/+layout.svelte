@@ -24,6 +24,8 @@
   const githubProvider = new GithubAuthProvider();
   const auth = getAuth();
 
+  let loggedIn = false;
+
   function loginRequest(email, username, uid) {
     const user = {
       email: email,
@@ -46,8 +48,6 @@
       });
   }
 
-  let loggedIn = false;
-
   // authentication functions
   function loginWithGoogle() {
     signInWithPopup(auth, googleProvider)
@@ -67,6 +67,7 @@
         const credential = GoogleAuthProvider.credentialFromError(error);
         console.log("error logging in with google: ");
         console.log(errorMessage);
+        // FIX: currently alerts regardless of the error
         alert(
           "An account with this email already exists. Try logging in with Github."
         );
@@ -81,7 +82,7 @@
         const token = credential.accessToken;
 
         const user = result.user;
-        let loggedIn = true;
+        loggedIn = true;
         console.log(user + "from github");
       })
       .catch((error) => {
@@ -89,6 +90,7 @@
         const errorMessage = error.message;
         const email = error.customData.email;
         const credential = GithubAuthProvider.credentialFromError(error);
+        // FIX: currently alerts regardless of the error
         alert(
           "An account with this email already exists. Try logging in with Google."
         );
