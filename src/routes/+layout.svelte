@@ -8,6 +8,7 @@
     signOut,
   } from "firebase/auth";
   import { initializeApp } from "firebase/app";
+  import { currentUser } from "../stores.js";
 
   // firebase constants
   const firebaseConfig = {
@@ -24,7 +25,10 @@
   const githubProvider = new GithubAuthProvider();
   const auth = getAuth();
 
-  let loggedIn = false;
+  let currentUserUID = "";
+  currentUser.subscribe((value) => {
+    currentUserUID = value;
+  });
 
   function loginRequest(email, username, uid) {
     const user = {
@@ -58,7 +62,7 @@
 
         const user = result.user;
         loginRequest(user.email, user.displayName, user.uid);
-        loggedIn = true;
+        currentUser.set(user.uid);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -82,7 +86,7 @@
         const token = credential.accessToken;
 
         const user = result.user;
-        loggedIn = true;
+        currentUser.set(user.uid);
         console.log(user + "from github");
       })
       .catch((error) => {
@@ -102,7 +106,7 @@
   function logout() {
     signOut(auth)
       .then(() => {
-        loggedIn = false;
+        currentUser.set("");
         console.log("signed out");
       })
       .catch((error) => {
@@ -129,7 +133,7 @@
 <nav class="navbar navbar-expand-lg bg-primary" style="padding: 18px 32px">
   <div class="container-fluid">
     <h1 class="navbar-child" style="margin-bottom: 0">ItecMonitor</h1>
-    {#if loggedIn}
+    {#if currentUserUID != ""}
       <button type="button" class="btn btn-primary login-bttn" on:click={logout}
         >Logout</button
       >
@@ -171,7 +175,7 @@
     >
       Public Apps
     </button>
-    {#if loggedIn}
+    {#if currentUserUID != ""}
       <button
         class="{selectedDev
           ? 'selected-button'
