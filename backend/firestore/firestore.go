@@ -21,6 +21,7 @@ type User struct {
 }
 
 type Endpoint struct {
+	Name   string `json:"name"`
 	Path   string `json:"path"`
 	Status string `json:"status"`
 }
@@ -70,6 +71,7 @@ func (firestoreClient *FirestoreClient) WriteAppToDatabase(app App, name string)
 
 func (firestoreClient *FirestoreClient) WriteEndpointToDatabase(app string, endpoint Endpoint) {
 	data := map[string]interface{}{
+		"name":   endpoint.Name,
 		"path":   endpoint.Path,
 		"status": endpoint.Status,
 	}
