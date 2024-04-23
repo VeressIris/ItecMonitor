@@ -58,7 +58,7 @@
         response.json();
       })
       .catch((error) => {
-        console.error("There was a problem with the fetch operation:", error);
+        console.error("There was a problem with the adding the apps to the db:", error);
       });
   }
 

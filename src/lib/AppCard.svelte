@@ -6,7 +6,7 @@
   export let status = "Down";
 
   function openAppPage() {
-    goto("../appPage");
+    goto("../apps/" + appName);
   }
 </script>
 

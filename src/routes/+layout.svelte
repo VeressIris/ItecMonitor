@@ -119,14 +119,14 @@
   function goToPublicApps() {
     selectedDev = false;
     selectedPublic = !selectedPublic;
-    goto("/");
+    goto("/publicApps");
   }
 
   let selectedDev = false;
   function goToDevDashboard() {
     selectedPublic = false;
     selectedDev = !selectedDev;
-    goto("../devDashboard");
+    goto("../developerDashboard");
   }
 </script>
 

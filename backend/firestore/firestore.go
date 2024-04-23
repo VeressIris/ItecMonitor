@@ -129,7 +129,6 @@ func (firestoreClient *FirestoreClient) GetEndpoints(appName string) ([]Endpoint
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(doc.Data()["endpoints"])
 
 	// parse endpoints data
 	endpointsData, ok := doc.Data()["endpoints"].([]interface{})

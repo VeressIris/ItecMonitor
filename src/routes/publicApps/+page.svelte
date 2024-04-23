@@ -1,5 +1,5 @@
 <script>
-  import AppCard from "../lib/AppCard.svelte";
+  import AppCard from "../../lib/AppCard.svelte";
 </script>
 
 <div class="header">
