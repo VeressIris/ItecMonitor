@@ -2,6 +2,7 @@ package firestore
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	firestore "cloud.google.com/go/firestore"
@@ -28,7 +29,7 @@ type App struct {
 	Name      string `json:"name"`
 	Developer string `json:"developer"`
 	BaseURL   string `json:"baseurl"`
-	Endpoints []Endpoint
+	Endpoints []map[string]interface{}
 	Status    string `json:"status"`
 }
 
@@ -97,13 +98,13 @@ func (firestoreClient *FirestoreClient) GetDevApps(dev string) ([]App, error) {
 		if !ok {
 			log.Fatalf("Failed to retrieve endpoints data")
 		}
-		endpoints := make([]Endpoint, len(endpointsData))
+		endpoints := make([]map[string]interface{}, len(endpointsData))
 		for i, endpointData := range endpointsData {
-			endpoint := endpointData.(map[string]interface{})
-			endpoints[i] = Endpoint{
-				Path:   endpoint["path"].(string),
-				Status: endpoint["status"].(string),
+			endpoint, ok := endpointData.(map[string]interface{})
+			if !ok {
+				return nil, fmt.Errorf("invalid endpoint data type")
 			}
+			endpoints[i] = endpoint
 		}
 
 		// create app
