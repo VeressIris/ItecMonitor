@@ -64,5 +64,25 @@ func main() {
 		return c.JSON(apps)
 	})
 
+	app.Post("/getEndpoints", func(c *fiber.Ctx) error {
+		app := string(c.Body())
+		appSplit := strings.Split(app, "=")
+		if len(appSplit) > 1 {
+			app = appSplit[1]
+		}
+
+		apps, err := client.GetEndpoints(app)
+		if err != nil {
+			return err
+		}
+
+		fmt.Print(app + ": ")
+		fmt.Println(apps)
+
+		c.Set("Content-Type", "application/json")
+
+		return c.JSON(apps)
+	})
+
 	app.Listen(":3000")
 }

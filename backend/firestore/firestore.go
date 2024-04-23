@@ -22,7 +22,7 @@ type User struct {
 
 type Endpoint struct {
 	Name   string `json:"name"`
-	Path   string `json:"path"`
+	URL    string `json:"url"`
 	Status string `json:"status"`
 }
 
@@ -72,7 +72,7 @@ func (firestoreClient *FirestoreClient) WriteAppToDatabase(app App, name string)
 func (firestoreClient *FirestoreClient) WriteEndpointToDatabase(app string, endpoint Endpoint) {
 	data := map[string]interface{}{
 		"name":   endpoint.Name,
-		"path":   endpoint.Path,
+		"url":    endpoint.URL,
 		"status": endpoint.Status,
 	}
 	_, err := firestoreClient.Client.Collection("apps").Doc(app).Set(firestoreClient.ctx, map[string]interface{}{
@@ -95,6 +95,7 @@ func (firestoreClient *FirestoreClient) GetDevApps(dev string) ([]App, error) {
 			return nil, err
 		}
 
+		//TODO: don't read all the endpoints, just the number of endpoints
 		// parse endpoints data
 		endpointsData, ok := doc.Data()["endpoints"].([]interface{})
 		if !ok {
@@ -121,4 +122,32 @@ func (firestoreClient *FirestoreClient) GetDevApps(dev string) ([]App, error) {
 		apps = append(apps, app)
 	}
 	return apps, nil
+}
+
+func (firestoreClient *FirestoreClient) GetEndpoints(appName string) ([]Endpoint, error) {
+	doc, err := firestoreClient.Client.Collection("apps").Doc(appName).Get(firestoreClient.ctx)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(doc.Data()["endpoints"])
+
+	// parse endpoints data
+	endpointsData, ok := doc.Data()["endpoints"].([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("failed to retrieve endpoints data")
+	}
+	endpoints := make([]Endpoint, len(endpointsData))
+	for i, endpointData := range endpointsData {
+		endpoint, ok := endpointData.(map[string]interface{})
+		if !ok {
+			return nil, fmt.Errorf("invalid endpoint data format")
+		}
+		endpoints[i] = Endpoint{
+			Name:   endpoint["name"].(string),
+			URL:    endpoint["url"].(string),
+			Status: endpoint["status"].(string),
+		}
+	}
+
+	return endpoints, nil
 }

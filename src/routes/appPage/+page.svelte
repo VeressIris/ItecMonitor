@@ -18,6 +18,10 @@
       status: "Up",
     },
   ];
+
+  function getEndpoints() {}
+
+  getEndpoints();
 </script>
 
 <div class="header">
